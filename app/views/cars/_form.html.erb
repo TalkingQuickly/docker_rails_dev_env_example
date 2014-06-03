@@ -1,0 +1,25 @@
+<%= form_for(@car) do |f| %>
+  <% if @car.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@car.errors.count, "error") %> prohibited this car from being saved:</h2>
+
+      <ul>
+      <% @car.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :make %><br>
+    <%= f.text_field :make %>
+  </div>
+  <div class="field">
+    <%= f.label :colour %><br>
+    <%= f.text_field :colour %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

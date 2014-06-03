@@ -1,0 +1,24 @@
+default: &default
+  adapter: postgresql
+  pool: 5
+  timeout: 5000
+
+development:
+  <<: *default
+  encoding: unicode
+  database: dpa_development
+  pool: 5
+  username: <%= ENV['DB_ENV_POSTGRESQL_USER'] %>
+  password: <%= ENV['DB_ENV_POSTGRESQL_PASS'] %>
+  host: <%= ENV['DB_PORT_5432_TCP_ADDR'] %>
+
+test:
+  <<: *default
+  encoding: unicode
+  database: dpa_test
+  pool: 5
+  username: <%= ENV['DB_DATABASE_USERNAME'] %>
+  password: <%= ENV['DB_DATABASE_PASSWORD'] %>
+  host: <%= ENV['DB_PORT_5432_TCP_ADDR'] %>
+
+
