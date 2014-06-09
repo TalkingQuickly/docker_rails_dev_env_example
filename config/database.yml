@@ -17,8 +17,6 @@ test:
   encoding: unicode
   database: dpa_test
   pool: 5
-  username: <%= ENV['DB_DATABASE_USERNAME'] %>
-  password: <%= ENV['DB_DATABASE_PASSWORD'] %>
+  username: <%= ENV['DB_ENV_POSTGRESQL_USER'] %>
+  password: <%= ENV['DB_ENV_POSTGRESQL_PASS'] %>
   host: <%= ENV['DB_PORT_5432_TCP_ADDR'] %>
-
-
