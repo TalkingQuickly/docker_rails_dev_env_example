@@ -40,6 +40,8 @@ Vagrant.configure("2") do |config|
 
   # Rails Server Port Forwarding
   config.vm.network "forwarded_port", guest: 3000, host: 3000
+  config.vm.network "forwarded_port", guest: 3001, host: 3001
+  config.vm.network "forwarded_port", guest: 4243, host: 4243
 
   # Ubuntu
   config.vm.box = "precise64"

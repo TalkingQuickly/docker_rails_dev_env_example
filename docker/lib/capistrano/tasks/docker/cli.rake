@@ -12,10 +12,21 @@ namespace :docker do
     cmd += generate_flags(conf[:links], '--link')
     cmd += generate_flags(conf[:ports], '-p')
     cmd += generate_flags(conf[:envs], '-e')
-    cmd += "#{conf[:image]}:latest"
+    if conf[:mount_app]
+      cmd += " -v #{release_path}:/app "
+    end
+    cmd += " #{conf[:image]}:latest "
   end
 
   def docker_stop_cmd(conf)
     "docker stop #{conf[:name]}"
+  end
+
+  def generate_flags(values, flag)
+    out = ""
+    values.each do |val|
+      out += " #{flag} #{val} " 
+    end
+    out
   end
 end

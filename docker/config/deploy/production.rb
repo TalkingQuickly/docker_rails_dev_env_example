@@ -1,18 +1,33 @@
+set :full_app_name, "#{fetch(:application)}_#{fetch(:stage)}"
 
+set :deploy_to, "/home/vagrant/apps/#{fetch(:full_app_name)}"
 
-server 'localhost',
+server 'web1.docker.local',
   user: 'vagrant', 
   keys: %w(/Users/ben/.vagrant.d/insecure_private_key),
-  roles: %w{web app docker}, 
+  roles: %w{app docker}, 
   docker: {
     image: 'talkingquickly/rails',
     dockerfile: "/",
-    always_refresh: true,
     name: 'rails1',
-    links: [],
-    volumes: '',
+    links: ["pg1:db"],
+    mount_app: true,
     envs: [],
     ports: ["3001:3000"]
+    },
+  port: 2222
+
+server 'pg1.docker.local',
+  user: 'vagrant', 
+  keys: %w(/Users/ben/.vagrant.d/insecure_private_key),
+  roles: %w{db docker}, 
+  docker: {
+    image: 'talkingquickly/postgres',
+    dockerfile: "/docker/images/postgres",
+    name: 'pg1',
+    links: [],
+    envs: ["POSTGRESQL_USER=docker","POSTGRESQL_PASS=docker"],
+    ports: []
     },
   port: 2222
 

@@ -31,7 +31,7 @@ RUN gem regenerate_binstubs
 RUN apt-get install -y -q postgresql-client
 
 # Rails app
-ADD docker/rails/start-server.sh /start-server.sh
+ADD docker/images/rails/start-server.sh /start-server.sh
 RUN chmod +x /start-server.sh
 # RUN mkdir /app
 
@@ -46,7 +46,7 @@ RUN mkdir /app
 
 ENV RAILS_ENV development
 
-ADD ./docker/rails/setup_database.sh /setup_database.sh
+ADD ./docker/images/rails/setup_database.sh /setup_database.sh
 RUN chmod +x /setup_database.sh
 
 EXPOSE 3000
