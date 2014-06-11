@@ -18,6 +18,16 @@ namespace :docker do
     cmd += " #{conf[:image]}:latest "
   end
 
+  def docker_run_interactive_cmd(conf)
+    cmd = "docker run -i -t --rm "
+    cmd += generate_flags(conf[:links], '--link')
+    cmd += generate_flags(conf[:envs], '-e')
+    if conf[:mount_app]
+      cmd += " -v #{release_path}:/app "
+    end
+    cmd += " #{conf[:image]}:latest "
+  end
+
   def docker_stop_cmd(conf)
     "docker stop #{conf[:name]}"
   end
