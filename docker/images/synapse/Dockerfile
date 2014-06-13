@@ -28,41 +28,26 @@ RUN gem install bundler rubygems-bundler --no-rdoc --no-ri
 # Regenerate binstubs
 RUN gem regenerate_binstubs
 
-RUN apt-get install -y -q postgresql-client
+RUN gem install "synapse"
 
-# Rails app
-ADD docker/images/rails/start-server.sh /start-server.sh
-RUN chmod +x /start-server.sh
-# RUN mkdir /app
+RUN \
+  apt-get install -y haproxy && \
+  sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy
 
-# Preinstall majority of gems
-WORKDIR /tmp 
-ADD ./Gemfile Gemfile
-ADD ./Gemfile.lock Gemfile.lock
-RUN bundle install 
+RUN apt-get install -y -q supervisor openssh-server
 
-RUN mkdir /app
-# ADD . /app
-
-ENV RAILS_ENV development
-
-ADD ./docker/images/rails/setup_database.sh /setup_database.sh
-RUN chmod +x /setup_database.sh
-
-RUN apt-get install -y -q supervisor
-
+RUN mkdir -p /var/run/sshd
 RUN mkdir -p /var/log/supervisor
 
-ADD ./docker/images/rails/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN gem install "nerve"
+ADD has_proxy_config /etc/haproxy/haproxy.cfg
 
-ADD ./docker/images/rails/nerve_config.conf.json /nerve_config.conf.json
+RUN chown haproxy:haproxy /etc/haproxy/haproxy.cfg
 
-ADD ./docker/images/rails/start-nerve.sh /start-nerve.sh
+RUN mkdir /var/lib/haproxy
 
-RUN chmod +x /start-nerve.sh
+ADD ./config.json /synapse-config.json
 
-EXPOSE 3000
-
+EXPOSE 22 80
 CMD ["/usr/bin/supervisord"]

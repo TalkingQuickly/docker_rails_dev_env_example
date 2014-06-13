@@ -28,41 +28,4 @@ RUN gem install bundler rubygems-bundler --no-rdoc --no-ri
 # Regenerate binstubs
 RUN gem regenerate_binstubs
 
-RUN apt-get install -y -q postgresql-client
-
-# Rails app
-ADD docker/images/rails/start-server.sh /start-server.sh
-RUN chmod +x /start-server.sh
-# RUN mkdir /app
-
-# Preinstall majority of gems
-WORKDIR /tmp 
-ADD ./Gemfile Gemfile
-ADD ./Gemfile.lock Gemfile.lock
-RUN bundle install 
-
-RUN mkdir /app
-# ADD . /app
-
-ENV RAILS_ENV development
-
-ADD ./docker/images/rails/setup_database.sh /setup_database.sh
-RUN chmod +x /setup_database.sh
-
-RUN apt-get install -y -q supervisor
-
-RUN mkdir -p /var/log/supervisor
-
-ADD ./docker/images/rails/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
 RUN gem install "nerve"
-
-ADD ./docker/images/rails/nerve_config.conf.json /nerve_config.conf.json
-
-ADD ./docker/images/rails/start-nerve.sh /start-nerve.sh
-
-RUN chmod +x /start-nerve.sh
-
-EXPOSE 3000
-
-CMD ["/usr/bin/supervisord"]

@@ -1,0 +1,23 @@
+{
+  "instance_id": "mymachine",
+  // "service_conf_dir": "example/nerve_services",
+  "services": {
+    "your_http_service": {
+      "host": "172.17.42.1",
+      "port": 3000,
+      "reporter_type": "zookeeper",
+      "zk_hosts": ["172.17.42.1:2181"],
+      "zk_path": "/services/rails_app",
+      "check_interval": 2,
+      "checks": [
+        {
+          "type": "http",
+          "uri": "/",
+          "timeout": 0.2,
+          "rise": 3,
+          "fall": 2
+        }
+      ]
+    }
+  }
+}

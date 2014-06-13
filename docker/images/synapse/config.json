@@ -1,0 +1,59 @@
+{
+  "services": {
+    "rails_app": {
+      "default_servers": [
+      ],
+      "discovery": {
+        "method": "zookeeper",
+        "path": "/services/rails_app",
+        "hosts": [
+          "172.17.42.1:2181"
+        ]
+      },
+      "haproxy": {
+        "port": 3000,
+        "server_options": "check inter 2s rise 3 fall 2",
+        "listen": [
+          "mode http"
+        ]
+      }
+      
+    }
+  },
+  "haproxy": {
+    "reload_command": "supervisorctl restart haproxy",
+    "config_file_path": "/etc/haproxy/haproxy.cfg",
+    "socket_file_path": "/var/haproxy/stats.sock",
+    "frontend":  [],
+    "bind_address":"0.0.0.0",
+    "do_writes": true,
+    "do_reloads": true,
+    "do_socket": true,
+    "global": [
+      "user haproxy",
+      "group haproxy",
+      "maxconn 4096",
+      "chroot /var/lib/haproxy",
+      "log     127.0.0.1 local0",
+      "log     127.0.0.1 local1 notice"
+    ],
+    "defaults": [
+      "mode     http",
+      "log      global",
+      "option   dontlognull",
+      "maxconn  2000",
+      "retries  3",
+      "timeout  connect 5s",
+      "timeout  client  1m",
+      "timeout  server  1m",
+      "option   redispatch",
+      "balance  roundrobin"
+    ],
+    "extra_sections": {
+      "listen stats :80": [
+        "stats enable",
+        "stats uri /",
+      ]
+    }
+  }
+}
