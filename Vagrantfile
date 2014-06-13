@@ -6,9 +6,9 @@ docker stop $(docker ps -a -q)
 docker rm $(docker ps -a -q)
 
 # Build containers from Dockerfiles
-docker build -t postgres /app/docker/postgres
+docker build -t postgres /app/docker/images/postgres
 docker build -t rails /app
-docker build -t redis /app/docker/redis/
+docker build -t redis /app/docker/images/redis/
 
 # Run and link the containers
 docker run -d --name postgres -e POSTGRESQL_USER=docker -e POSTGRESQL_PASS=docker postgres:latest
@@ -23,6 +23,10 @@ $start = <<SCRIPT
 docker start postgres
 docker start redis
 docker start rails
+SCRIPT
+
+$install_docker = <<SCRIPT
+  curl -s https://get.docker.io/ubuntu/ | sudo sh
 SCRIPT
 
 VAGRANTFILE_API_VERSION = "2"
@@ -44,10 +48,10 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 4243, host: 4243
 
   # Ubuntu
-  config.vm.box = "precise64"
+  config.vm.box = "ubuntu/trusty64"
 
   # Install latest docker
-  config.vm.provision "docker"
+  config.vm.provision "shell", inline: $install_docker
 
   # Must use NFS for this otherwise rails
   # performance will be awful
@@ -60,4 +64,6 @@ Vagrant.configure("2") do |config|
   # Make sure the correct containers are running
   # every time we start the VM.
   config.vm.provision "shell", run: "always", inline: $start
+
+  config.vm.define "docker1"
 end

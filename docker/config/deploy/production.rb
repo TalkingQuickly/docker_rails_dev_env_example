@@ -2,7 +2,22 @@ set :full_app_name, "#{fetch(:application)}_#{fetch(:stage)}"
 
 set :deploy_to, "/home/vagrant/apps/#{fetch(:full_app_name)}"
 
-server 'web1.docker.local',
+server 'webfrontend.docker.local',
+  user: 'vagrant', 
+  keys: %w(/Users/ben/.vagrant.d/insecure_private_key),
+  roles: %w{web docker}, 
+  docker: {
+    image: 'talkingquickly/nginx-loadbalance',
+    dockerfile: "/docker/images/nginx",
+    name: 'webfrontend',
+    links: ["rails1:app1"],
+    mount_app: true,
+    envs: ["HOSTNAME=captest.talkingquickly.co.uk","NODES=127.0.0.1:3001"],
+    ports: ["80:80"]
+    },
+  port: 2222
+
+server 'app1.docker.local',
   user: 'vagrant', 
   keys: %w(/Users/ben/.vagrant.d/insecure_private_key),
   roles: %w{app docker}, 
@@ -12,7 +27,7 @@ server 'web1.docker.local',
     name: 'rails1',
     links: ["pg1:db"],
     mount_app: true,
-    envs: [],
+    envs: ["RAILS_ENV=production"],
     ports: ["3001:3000"]
     },
   port: 2222

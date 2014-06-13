@@ -18,3 +18,5 @@
 # In a production application, we wouldn't 
 # include .env in version control
 # .env
+
+.vagrant/

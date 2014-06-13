@@ -14,6 +14,13 @@ namespace :docker do
       execute docker_rm_cmd(conf) rescue nil
       execute docker_run_cmd(conf)
     end
+
+    on roles(:web) do |role|
+      conf = role.fetch(:docker)
+      execute docker_stop_cmd(conf) rescue nil
+      execute docker_rm_cmd(conf) rescue nil
+      execute docker_run_cmd(conf)
+    end
   end
 end
 
