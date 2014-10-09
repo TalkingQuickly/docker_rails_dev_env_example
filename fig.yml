@@ -1,0 +1,18 @@
+rails:
+  build: .
+  volumes:
+    - ./:/app
+  ports:
+    - "3000:3000"
+  links:
+    - postgres:db
+    - redis
+
+postgres:
+  build: ./docker/postgres
+  environment:
+    - POSTGRESQL_USER=docker
+    - POSTGRESQL_PASS=docker
+
+redis:
+  build: ./docker/redis
