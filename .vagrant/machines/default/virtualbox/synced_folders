@@ -1,1 +1,0 @@
-{"nfs":{"/app":{"type":"nfs","guestpath":"/app","hostpath":"/Users/ben/proj/docker_postgres_app","map_uid":501,"map_gid":20,"nfs_udp":true,"nfs_version":3,"uuid":"267609049"}},"virtualbox":{"/vagrant":{"guestpath":"/vagrant","hostpath":"/Users/ben/proj/docker_postgres_app"}}}
